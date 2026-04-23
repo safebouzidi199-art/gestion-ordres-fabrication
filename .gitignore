@@ -21,3 +21,10 @@ frontend/.angular/
 # OS
 .DS_Store
 Thumbs.db
+
+# Secrets — NE JAMAIS committer
+.env
+*.env.local
+
+# OWASP reports
+dependency-check-report.*

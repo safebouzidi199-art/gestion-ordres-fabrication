@@ -1,31 +1,19 @@
-# ================================
-# STAGE 1 : Build avec Maven
-# ================================
-FROM maven:3.9.6-eclipse-temurin-17 AS build
-
-# Dossier de travail dans le conteneur
+# ---- Build stage ----
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
 WORKDIR /app
-
-# Copier pom.xml et télécharger les dépendances (cache Docker)
 COPY pom.xml .
+# Download dependencies first (layer cache)
 RUN mvn dependency:go-offline -B
-
-# Copier le code source et compiler
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -B
 
-# ================================
-# STAGE 2 : Run avec Java léger
-# ================================
+# ---- Runtime stage ----
 FROM eclipse-temurin:17-jre-alpine
-
 WORKDIR /app
-
-# Copier le .jar depuis le stage de build
-COPY --from=build /app/target/*.jar app.jar
-
-# Port exposé
+# Create non-root user for security
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+COPY --from=builder /app/target/ProjetJee-0.0.1-SNAPSHOT.jar app.jar
+RUN chown appuser:appgroup app.jar
+USER appuser
 EXPOSE 8080
-
-# Lancer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]
