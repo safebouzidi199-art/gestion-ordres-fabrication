@@ -2,8 +2,6 @@ package com.example.demo.entities;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,6 +30,5 @@ public class Produit {
     private String fournisseur;
 
     @OneToMany(mappedBy = "produit")
-    @JsonIgnore
     private List<OrdreFabrication> ordres;
 }
