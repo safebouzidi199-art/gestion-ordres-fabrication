@@ -1,0 +1,42 @@
+<div class="page">
+  <div class="page-header">
+    <h2>👷 Employés</h2>
+    <button class="btn-add" (click)="openForm()">+ Ajouter</button>
+  </div>
+
+  <div [hidden]="!showForm" class="form-card">
+    <h3>{{ editId ? 'Modifier' : 'Nouvel employé' }}</h3>
+    <form (ngSubmit)="save()">
+      <input [(ngModel)]="form.nom" name="nom" placeholder="Nom" required />
+      <input [(ngModel)]="form.poste" name="poste" placeholder="Poste" />
+      <div class="form-actions">
+        <button type="submit" class="btn-save">Enregistrer</button>
+        <button type="button" class="btn-cancel" (click)="showForm=false">Annuler</button>
+      </div>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Nom</th><th>Poste</th><th>Machine assignée</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let e of employes">
+        <td>{{ e.id }}</td>
+        <td>{{ e.nom }}</td>
+        <td>{{ e.poste }}</td>
+        <td>
+          <select (change)="assignMachine(e.id, +$any($event.target).value)">
+            <option value="">-- Choisir --</option>
+            <option *ngFor="let m of machines" [value]="m.id"
+              [selected]="e.machineAssignee?.id === m.id">{{ m.nom }}</option>
+          </select>
+        </td>
+        <td>
+          <button class="btn-edit" (click)="openForm(e)">✏️</button>
+          <button class="btn-del" (click)="delete(e.id)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

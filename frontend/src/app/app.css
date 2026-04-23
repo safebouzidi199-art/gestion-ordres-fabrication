@@ -1,0 +1,17 @@
+.navbar {
+  display: flex; align-items: center;
+  background: #1976d2; color: white;
+  padding: 0 1.5rem; height: 56px;
+  gap: 2rem;
+}
+.brand { font-weight: bold; font-size: 1.1rem; }
+.nav-links { display: flex; gap: 1rem; flex: 1; }
+.nav-links a { color: white; text-decoration: none; padding: 0.4rem 0.8rem; border-radius: 4px; }
+.nav-links a.active, .nav-links a:hover { background: rgba(255,255,255,0.2); }
+.nav-right { display: flex; align-items: center; gap: 1rem; font-size: 0.9rem; }
+.nav-right button {
+  background: rgba(255,255,255,0.2); color: white;
+  border: 1px solid rgba(255,255,255,0.4);
+  padding: 0.3rem 0.8rem; border-radius: 4px; cursor: pointer;
+}
+.content { padding: 1.5rem; }

@@ -1,0 +1,44 @@
+<div class="page">
+  <h2>📊 Dashboard — Responsable Production</h2>
+
+  <div class="stats">
+    <div class="stat-card attente">
+      <div class="stat-number">{{ enAttente }}</div>
+      <div class="stat-label">En attente</div>
+    </div>
+    <div class="stat-card cours">
+      <div class="stat-number">{{ enCours }}</div>
+      <div class="stat-label">En cours</div>
+    </div>
+    <div class="stat-card termine">
+      <div class="stat-number">{{ termine }}</div>
+      <div class="stat-label">Terminés</div>
+    </div>
+    <div class="stat-card total">
+      <div class="stat-number">{{ ordres.length }}</div>
+      <div class="stat-label">Total ordres</div>
+    </div>
+  </div>
+
+  <h3>📋 Liste des ordres de fabrication</h3>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Projet</th><th>Produit</th><th>Quantité</th><th>Date</th><th>État</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let o of ordres">
+        <td>{{ o.id }}</td>
+        <td>{{ o.projet }}</td>
+        <td>{{ o.produit?.nom }}</td>
+        <td>{{ o.quantite }}</td>
+        <td>{{ o.date || '—' }}</td>
+        <td>
+          <select [(ngModel)]="o.etat" (ngModelChange)="updateEtat(o.id, $event)">
+            <option *ngFor="let e of etats" [value]="e">{{ e }}</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

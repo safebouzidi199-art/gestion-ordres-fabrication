@@ -1,0 +1,23 @@
+# Maven
+target/
+*.class
+*.jar
+*.war
+
+# Eclipse
+.classpath
+.project
+.settings/
+.factorypath
+
+# Spring Boot
+*.log
+
+# Angular
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,46 @@
+<div class="page">
+  <div class="page-header">
+    <h2>📋 Ordres de Fabrication</h2>
+    <button class="btn-add" (click)="openForm()">+ Créer un ordre</button>
+  </div>
+
+  <div [hidden]="!showForm" class="form-card">
+    <h3>Nouvel ordre de fabrication</h3>
+    <form (ngSubmit)="save()">
+      <input [(ngModel)]="form.projet" name="projet" placeholder="Nom du projet" required />
+      <input type="number" [(ngModel)]="form.quantite" name="quantite" placeholder="Quantité" min="1" required />
+      <input type="date" [(ngModel)]="form.date" name="date" />
+      <select [(ngModel)]="form.produit.id" name="produitId" required>
+        <option [value]="null">-- Choisir un produit --</option>
+        <option *ngFor="let p of produits" [value]="p.id">{{ p.nom }} (stock: {{ p.stock }})</option>
+      </select>
+      <div class="form-actions">
+        <button type="submit" class="btn-save">Créer</button>
+        <button type="button" class="btn-cancel" (click)="showForm=false">Annuler</button>
+      </div>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Projet</th><th>Produit</th><th>Quantité</th><th>Date</th><th>État</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let o of ordres">
+        <td>{{ o.id }}</td>
+        <td>{{ o.projet }}</td>
+        <td>{{ o.produit?.nom }}</td>
+        <td>{{ o.quantite }}</td>
+        <td>{{ o.date || '—' }}</td>
+        <td>
+          <select [(ngModel)]="o.etat" (ngModelChange)="updateEtat(o.id, $event)">
+            <option *ngFor="let e of etats" [value]="e">{{ e }}</option>
+          </select>
+        </td>
+        <td>
+          <button class="btn-del" (click)="delete(o.id)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

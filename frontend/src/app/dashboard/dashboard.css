@@ -1,0 +1,21 @@
+@import '../shared.css';
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+}
+.stat-number { font-size: 2.5rem; font-weight: bold; }
+.stat-label { font-size: 0.9rem; margin-top: 0.3rem; }
+.attente { background: #e65100; }
+.cours { background: #1565c0; }
+.termine { background: #2e7d32; }
+.total { background: #6a1b9a; }
+h3 { color: #333; margin-bottom: 1rem; }

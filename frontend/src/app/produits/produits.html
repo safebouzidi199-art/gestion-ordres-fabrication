@@ -1,0 +1,39 @@
+<div class="page">
+  <div class="page-header">
+    <h2>📦 Produits</h2>
+    <button class="btn-add" (click)="openForm()">+ Ajouter</button>
+  </div>
+
+  <div [hidden]="!showForm" class="form-card">
+    <h3>{{ editId ? 'Modifier' : 'Nouveau produit' }}</h3>
+    <form (ngSubmit)="save()">
+      <input [(ngModel)]="form.nom" name="nom" placeholder="Nom du produit" required />
+      <input [(ngModel)]="form.type" name="type" placeholder="Type" />
+      <input type="number" [(ngModel)]="form.stock" name="stock" placeholder="Stock" min="0" />
+      <input [(ngModel)]="form.fournisseur" name="fournisseur" placeholder="Fournisseur" />
+      <div class="form-actions">
+        <button type="submit" class="btn-save">Enregistrer</button>
+        <button type="button" class="btn-cancel" (click)="showForm=false">Annuler</button>
+      </div>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Nom</th><th>Type</th><th>Stock</th><th>Fournisseur</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of produits">
+        <td>{{ p.id }}</td>
+        <td>{{ p.nom }}</td>
+        <td>{{ p.type }}</td>
+        <td><span [class]="stockClass(p.stock)">{{ p.stock }}</span></td>
+        <td>{{ p.fournisseur }}</td>
+        <td>
+          <button class="btn-edit" (click)="openForm(p)">✏️</button>
+          <button class="btn-del" (click)="delete(p.id)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,24 @@
+<nav *ngIf="isLoggedIn()" class="navbar">
+  <span class="brand">🏭 Fabrication</span>
+  <div class="nav-links">
+    <!-- Admin voit tout -->
+    <ng-container *ngIf="getRole() === 'ADMIN'">
+      <a routerLink="/employes" routerLinkActive="active">Employés</a>
+      <a routerLink="/machines" routerLinkActive="active">Machines</a>
+      <a routerLink="/produits" routerLinkActive="active">Produits</a>
+      <a routerLink="/ordres" routerLinkActive="active">Ordres</a>
+    </ng-container>
+    <!-- Responsable voit seulement le dashboard -->
+    <ng-container *ngIf="getRole() === 'RESPONSABLE_PRODUCTION'">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    </ng-container>
+  </div>
+  <div class="nav-right">
+    <span>{{ getUsername() }} ({{ getRole() }})</span>
+    <button (click)="logout()">Déconnexion</button>
+  </div>
+</nav>
+
+<div class="content">
+  <router-outlet />
+</div>

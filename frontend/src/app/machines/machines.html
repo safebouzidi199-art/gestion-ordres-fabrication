@@ -1,0 +1,39 @@
+<div class="page">
+  <div class="page-header">
+    <h2>⚙️ Machines</h2>
+    <button class="btn-add" (click)="openForm()">+ Ajouter</button>
+  </div>
+
+  <div [hidden]="!showForm" class="form-card">
+    <h3>{{ editId ? 'Modifier' : 'Nouvelle machine' }}</h3>
+    <form (ngSubmit)="save()">
+      <input [(ngModel)]="form.nom" name="nom" placeholder="Nom de la machine" required />
+      <select [(ngModel)]="form.etat" name="etat">
+        <option *ngFor="let e of etats" [value]="e">{{ e }}</option>
+      </select>
+      <input type="date" [(ngModel)]="form.derniereMaintenance" name="derniereMaintenance" />
+      <div class="form-actions">
+        <button type="submit" class="btn-save">Enregistrer</button>
+        <button type="button" class="btn-cancel" (click)="showForm=false">Annuler</button>
+      </div>
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Nom</th><th>État</th><th>Dernière maintenance</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let m of machines">
+        <td>{{ m.id }}</td>
+        <td>{{ m.nom }}</td>
+        <td><span [class]="badgeClass(m.etat)">{{ m.etat }}</span></td>
+        <td>{{ m.derniereMaintenance || '—' }}</td>
+        <td>
+          <button class="btn-edit" (click)="openForm(m)">✏️</button>
+          <button class="btn-del" (click)="delete(m.id)">🗑️</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
