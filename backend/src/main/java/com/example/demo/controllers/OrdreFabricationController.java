@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/ordres")
@@ -21,25 +20,23 @@ public class OrdreFabricationController {
     private OrdreFabricationService service;
 
     @PostMapping
-    public OrdreFabricationDTO create(@Valid @RequestBody OrdreFabrication o) {
-        return OrdreFabricationDTO.fromEntity(service.create(o));
+    public OrdreFabricationDTO create(@Valid @RequestBody OrdreFabricationDTO dto) {
+        return service.create(dto);
     }
 
     @GetMapping
     public List<OrdreFabricationDTO> getAll() {
-        return service.getAll().stream()
-                .map(OrdreFabricationDTO::fromEntity)
-                .collect(Collectors.toList());
+        return service.getAll();
     }
 
     @GetMapping("/{id}")
     public OrdreFabricationDTO getById(@PathVariable Long id) {
-        return OrdreFabricationDTO.fromEntity(service.getById(id));
+        return service.getById(id);
     }
 
     @PutMapping("/{id}/etat")
     public OrdreFabricationDTO updateEtat(@PathVariable Long id, @RequestParam EtatOrdre etat) {
-        return OrdreFabricationDTO.fromEntity(service.updateEtat(id, etat));
+        return service.updateEtat(id, etat);
     }
 
     @DeleteMapping("/{id}")

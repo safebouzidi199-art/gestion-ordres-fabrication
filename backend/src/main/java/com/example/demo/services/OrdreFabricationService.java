@@ -1,12 +1,15 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.OrdreFabricationDTO;
 import com.example.demo.entities.*;
+import com.example.demo.mappers.OrdreFabricationMapper;
 import com.example.demo.repositories.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdreFabricationService {
@@ -17,38 +20,49 @@ public class OrdreFabricationService {
     @Autowired
     private ProduitRepository produitRepo;
 
-    public OrdreFabrication create(OrdreFabrication o) {
+    @Autowired
+    private OrdreFabricationMapper mapper;
 
-        Produit p = produitRepo.findById(o.getProduit().getId())
+    public OrdreFabricationDTO create(OrdreFabricationDTO dto) {
+
+        Produit p = produitRepo.findById(dto.getProduitId())
                 .orElseThrow(() -> new RuntimeException("Produit introuvable"));
 
         // 🔥 logique métier
-        if (p.getStock() < o.getQuantite()) {
+        if (p.getStock() < dto.getQuantite()) {
             throw new RuntimeException("Stock insuffisant");
         }
 
         // diminuer stock
-        p.setStock(p.getStock() - o.getQuantite());
+        p.setStock(p.getStock() - dto.getQuantite());
         produitRepo.save(p);
 
-        o.setEtat(EtatOrdre.EN_ATTENTE);
+        OrdreFabrication ordre = mapper.toEntity(dto);
+        ordre.setEtat(EtatOrdre.EN_ATTENTE);
+        ordre.setProduit(p);
 
-        return repo.save(o);
+        OrdreFabrication saved = repo.save(ordre);
+        return mapper.toDTO(saved);
     }
 
-    public List<OrdreFabrication> getAll() {
-        return repo.findAll();
+    public List<OrdreFabricationDTO> getAll() {
+        return repo.findAll().stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public OrdreFabrication getById(Long id) {
-        return repo.findById(id)
+    public OrdreFabricationDTO getById(Long id) {
+        OrdreFabrication ordre = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ordre introuvable"));
+        return mapper.toDTO(ordre);
     }
 
-    public OrdreFabrication updateEtat(Long id, EtatOrdre etat) {
-        OrdreFabrication o = getById(id);
+    public OrdreFabricationDTO updateEtat(Long id, EtatOrdre etat) {
+        OrdreFabrication o = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ordre introuvable"));
         o.setEtat(etat);
-        return repo.save(o);
+        OrdreFabrication updated = repo.save(o);
+        return mapper.toDTO(updated);
     }
 
     public void delete(Long id) {
