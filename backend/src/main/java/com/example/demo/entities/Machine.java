@@ -3,13 +3,10 @@ package com.example.demo.entities;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -28,7 +25,7 @@ public class Machine {
     private String etat;
 
     private LocalDate derniereMaintenance;
+
     @OneToMany(mappedBy = "machineAssignee")
-    @JsonIgnore
     private List<Employe> employes;
 }
