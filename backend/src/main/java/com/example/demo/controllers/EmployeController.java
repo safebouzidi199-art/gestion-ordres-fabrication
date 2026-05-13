@@ -1,7 +1,6 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dto.EmployeDTO;
-import com.example.demo.entities.Employe;
 import com.example.demo.services.EmployeService;
 
 import jakarta.validation.Valid;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/employes")
@@ -21,25 +19,23 @@ public class EmployeController {
     private EmployeService service;
 
     @PostMapping
-    public EmployeDTO add(@Valid @RequestBody Employe e) {
-        return EmployeDTO.fromEntity(service.save(e));
+    public EmployeDTO add(@Valid @RequestBody EmployeDTO dto) {
+        return service.save(dto);
     }
 
     @GetMapping
     public List<EmployeDTO> getAll() {
-        return service.getAll().stream()
-                .map(EmployeDTO::fromEntity)
-                .collect(Collectors.toList());
+        return service.getAll();
     }
 
     @GetMapping("/{id}")
     public EmployeDTO getById(@PathVariable Long id) {
-        return EmployeDTO.fromEntity(service.getById(id));
+        return service.getById(id);
     }
 
     @PutMapping("/{id}")
-    public EmployeDTO update(@PathVariable Long id, @RequestBody Employe e) {
-        return EmployeDTO.fromEntity(service.update(id, e));
+    public EmployeDTO update(@PathVariable Long id, @RequestBody EmployeDTO dto) {
+        return service.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
@@ -49,6 +45,6 @@ public class EmployeController {
 
     @PutMapping("/{empId}/machine/{machineId}")
     public EmployeDTO assignMachine(@PathVariable Long empId, @PathVariable Long machineId) {
-        return EmployeDTO.fromEntity(service.assignMachine(empId, machineId));
+        return service.assignMachine(empId, machineId);
     }
 }
