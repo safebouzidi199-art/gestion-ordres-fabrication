@@ -1,12 +1,15 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.MachineDTO;
 import com.example.demo.entities.Machine;
+import com.example.demo.mappers.MachineMapper;
 import com.example.demo.repositories.MachineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MachineService {
@@ -14,30 +17,40 @@ public class MachineService {
     @Autowired
     private MachineRepository repo;
 
-    public Machine save(Machine m) {
-        if (m.getNom() == null || m.getNom().isEmpty()) {
+    @Autowired
+    private MachineMapper mapper;
+
+    public MachineDTO save(MachineDTO dto) {
+        if (dto.getNom() == null || dto.getNom().isEmpty()) {
             throw new RuntimeException("Nom machine obligatoire");
         }
-        return repo.save(m);
+        Machine machine = mapper.toEntity(dto);
+        Machine saved = repo.save(machine);
+        return mapper.toDTO(saved);
     }
 
-    public List<Machine> getAll() {
-        return repo.findAll();
+    public List<MachineDTO> getAll() {
+        return repo.findAll().stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Machine getById(Long id) {
-        return repo.findById(id)
+    public MachineDTO getById(Long id) {
+        Machine machine = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Machine introuvable"));
+        return mapper.toDTO(machine);
     }
 
-    public Machine update(Long id, Machine newM) {
-        Machine m = getById(id);
+    public MachineDTO update(Long id, MachineDTO dto) {
+        Machine m = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Machine introuvable"));
 
-        m.setNom(newM.getNom());
-        m.setEtat(newM.getEtat());
-        m.setDerniereMaintenance(newM.getDerniereMaintenance());
+        m.setNom(dto.getNom());
+        m.setEtat(dto.getEtat());
+        m.setDerniereMaintenance(dto.getDerniereMaintenance());
 
-        return repo.save(m);
+        Machine updated = repo.save(m);
+        return mapper.toDTO(updated);
     }
 
     public void delete(Long id) {
@@ -45,11 +58,15 @@ public class MachineService {
     }
 
     // Bonus métier
-    public List<Machine> getMachinesEnPanne() {
-        return repo.findByEtat("EN_PANNE");
+    public List<MachineDTO> getMachinesEnPanne() {
+        return repo.findByEtat("EN_PANNE").stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Machine> machinesAEntretenir(LocalDate date) {
-        return repo.findByDerniereMaintenanceBefore(date);
+    public List<MachineDTO> machinesAEntretenir(LocalDate date) {
+        return repo.findByDerniereMaintenanceBefore(date).stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

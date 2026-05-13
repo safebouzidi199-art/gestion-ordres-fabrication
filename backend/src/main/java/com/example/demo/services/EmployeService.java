@@ -1,7 +1,9 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.EmployeDTO;
 import com.example.demo.entities.Employe;
 import com.example.demo.entities.Machine;
+import com.example.demo.mappers.EmployeMapper;
 import com.example.demo.repositories.EmployeRepository;
 import com.example.demo.repositories.MachineRepository;
 
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeService {
@@ -19,26 +22,36 @@ public class EmployeService {
     @Autowired
     private MachineRepository machineRepo;
 
-    public Employe save(Employe e) {
-        return repo.save(e);
+    @Autowired
+    private EmployeMapper mapper;
+
+    public EmployeDTO save(EmployeDTO dto) {
+        Employe employe = mapper.toEntity(dto);
+        Employe saved = repo.save(employe);
+        return mapper.toDTO(saved);
     }
 
-    public List<Employe> getAll() {
-        return repo.findAll();
+    public List<EmployeDTO> getAll() {
+        return repo.findAll().stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Employe getById(Long id) {
-        return repo.findById(id)
+    public EmployeDTO getById(Long id) {
+        Employe employe = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employé introuvable"));
+        return mapper.toDTO(employe);
     }
 
-    public Employe update(Long id, Employe newE) {
-        Employe e = getById(id);
+    public EmployeDTO update(Long id, EmployeDTO dto) {
+        Employe e = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employé introuvable"));
 
-        e.setNom(newE.getNom());
-        e.setPoste(newE.getPoste());
+        e.setNom(dto.getNom());
+        e.setPoste(dto.getPoste());
 
-        return repo.save(e);
+        Employe updated = repo.save(e);
+        return mapper.toDTO(updated);
     }
 
     public void delete(Long id) {
@@ -46,12 +59,14 @@ public class EmployeService {
     }
 
     // 🔥 Affectation machine
-    public Employe assignMachine(Long employeId, Long machineId) {
-        Employe e = getById(employeId);
+    public EmployeDTO assignMachine(Long employeId, Long machineId) {
+        Employe e = repo.findById(employeId)
+                .orElseThrow(() -> new RuntimeException("Employé introuvable"));
         Machine m = machineRepo.findById(machineId)
                 .orElseThrow(() -> new RuntimeException("Machine introuvable"));
 
         e.setMachineAssignee(m);
-        return repo.save(e);
+        Employe updated = repo.save(e);
+        return mapper.toDTO(updated);
     }
 }
