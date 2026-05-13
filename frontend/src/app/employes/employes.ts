@@ -52,7 +52,8 @@ export class EmployesComponent implements OnInit {
       this.employeService.delete(id).subscribe(() => this.load());
   }
 
-  assignMachine(empId: number, machineId: number) {
-    this.employeService.assignMachine(empId, machineId).subscribe(() => this.load());
+  assignMachine(empId: number, machineId: any) {
+    if (!machineId) return;
+    this.employeService.assignMachine(empId, +machineId).subscribe(() => this.load());
   }
 }

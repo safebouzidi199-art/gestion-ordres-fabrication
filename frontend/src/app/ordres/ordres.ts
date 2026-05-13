@@ -14,7 +14,7 @@ import { ProduitService } from '../services/produit.service';
 export class OrdresComponent implements OnInit {
   ordres: any[] = [];
   produits: any[] = [];
-  form: any = { projet: '', quantite: 1, date: '', produit: { id: null } };
+  form: any = { projet: '', quantite: 1, date: '', produitId: null };
   showForm = false;
   etats = ['EN_ATTENTE', 'EN_COURS', 'TERMINE'];
 
@@ -31,7 +31,7 @@ export class OrdresComponent implements OnInit {
 
   openForm() {
     this.showForm = true;
-    this.form = { projet: '', quantite: 1, date: '', produit: { id: null } };
+    this.form = { projet: '', quantite: 1, date: '', produitId: null };
   }
 
   save() {
