@@ -10,9 +10,9 @@
       <input [(ngModel)]="form.projet" name="projet" placeholder="Nom du projet" required />
       <input type="number" [(ngModel)]="form.quantite" name="quantite" placeholder="Quantité" min="1" required />
       <input type="date" [(ngModel)]="form.date" name="date" />
-      <select [(ngModel)]="form.produit.id" name="produitId" required>
-        <option [value]="null">-- Choisir un produit --</option>
-        <option *ngFor="let p of produits" [value]="p.id">{{ p.nom }} (stock: {{ p.stock }})</option>
+      <select [(ngModel)]="form.produitId" name="produitId" required>
+        <option [ngValue]="null">-- Choisir un produit --</option>
+        <option *ngFor="let p of produits" [ngValue]="p.id">{{ p.nom }} (stock: {{ p.stock }})</option>
       </select>
       <div class="form-actions">
         <button type="submit" class="btn-save">Créer</button>
@@ -29,7 +29,7 @@
       <tr *ngFor="let o of ordres">
         <td>{{ o.id }}</td>
         <td>{{ o.projet }}</td>
-        <td>{{ o.produit?.nom }}</td>
+        <td>{{ o.produitNom }}</td>
         <td>{{ o.quantite }}</td>
         <td>{{ o.date || '—' }}</td>
         <td>

@@ -26,10 +26,9 @@
         <td>{{ e.nom }}</td>
         <td>{{ e.poste }}</td>
         <td>
-          <select (change)="assignMachine(e.id, +$any($event.target).value)">
+          <select [ngModel]="e.machineAssigneeId" (ngModelChange)="assignMachine(e.id, $event)" name="machine_{{e.id}}">
             <option value="">-- Choisir --</option>
-            <option *ngFor="let m of machines" [value]="m.id"
-              [selected]="e.machineAssignee?.id === m.id">{{ m.nom }}</option>
+            <option *ngFor="let m of machines" [value]="m.id">{{ m.nom }}</option>
           </select>
         </td>
         <td>
